@@ -15,3 +15,8 @@ slurmjobs/
 .wandb.secret.env
 .venv/
 wandb/
+.qodo/
+*.pt
+*.bin
+.netrc
+.modal.toml

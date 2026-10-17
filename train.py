@@ -107,7 +107,7 @@ class TrainConfig:
     resume_from_checkpoint: bool = True
     latest_checkpoint_frequency: int | None = 1000
     keep_checkpoint_steps: tuple[int, ...] = field(default_factory=tuple)
-    torch_compile_mode: str = "reduce-overhead"
+    torch_compile_mode: str | None = "reduce-overhead"
     model_dir: str | Path = MODEL_DIR
     wandb_entity: str = WANDB_ENTITY
     wandb_project: str = WANDB_PROJECT
@@ -600,7 +600,11 @@ def train(config):
     )
 
     num_cuda_devices = torch.cuda.device_count()
-    torch_compile_enabled = num_cuda_devices == 1 and config.num_micro_batches == 1
+    torch_compile_enabled = (
+        num_cuda_devices == 1
+        and config.num_micro_batches == 1
+        and config.torch_compile_mode is not None
+    )
     torch_compile_mode = config.torch_compile_mode if torch_compile_enabled else None
     device = "cuda:0" if num_cuda_devices > 0 else "cpu"
 
@@ -736,7 +740,11 @@ def train(config):
         import wandb
 
         if checkpointer.enabled and wandb_run_id is None:
-            wandb_run_id = wandb.util.generate_id()
+            # wandb>=0.19 moved generate_id; keep fallback for older pins.
+            generate_id = getattr(wandb.util, "generate_id", None)
+            if generate_id is None:
+                from wandb.sdk.lib.runid import generate_id
+            wandb_run_id = generate_id()
             checkpointer.write_wandb_run_state(
                 wandb_run_id,
                 wandb_entity=config.wandb_entity,

@@ -11,9 +11,12 @@ dependencies = [
     "numpy",
     "requests",
     "sentencepiece",
+    # Triton imports setuptools during backend discovery; without it,
+    # torch.compile(mode="reduce-overhead") fails on Modal.
+    "setuptools",
     "torch==2.6.0",
     "tqdm",
-    "wandb==0.17.3",
+    "wandb>=0.19",
 ]
 
 [tool.uv]

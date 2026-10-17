@@ -15,9 +15,11 @@ from model_config import validate_precision
 REPO_ROOT = Path(__file__).resolve().parent
 
 # Student-facing configuration. Most students only edit these three lines.
-CONFIG_MODAL_ENVIRONMENT = "YOUR_MODAL_ENVIRONMENT"
-CONFIG_WANDB_ENTITY = "YOUR_WANDB_USERNAME_OR_TEAM"
+# Do not put API keys or tokens in this file (use Modal secrets / env vars).
+CONFIG_MODAL_ENVIRONMENT = "main"
+CONFIG_WANDB_ENTITY = "ameyades94-n-a"
 CONFIG_WANDB_PROJECT = "assignments"
+MODAL_SHARED_DATA_ENVIRONMENT = CONFIG_MODAL_ENVIRONMENT
 
 # Non-Modal users only: advanced local path overrides.
 # Leave these as None to use the default local directories.
